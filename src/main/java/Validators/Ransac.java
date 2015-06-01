@@ -12,8 +12,8 @@ import java.util.ArrayList;
  * on 2015-06-01.
  */
 public abstract class Ransac {
-    private ArrayList<Pair<VectorPoint, VectorPoint>> pairs;
-    private ArrayList<Pair<VectorPoint, VectorPoint>> validPairs;
+    protected ArrayList<Pair<VectorPoint, VectorPoint>> generatedPairs;
+    protected ArrayList<Pair<VectorPoint, VectorPoint>> validPairs;
 
     public abstract Matrix findTransform();
 

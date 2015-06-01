@@ -57,7 +57,7 @@ public class Main {
         ArrayList<Pair<VectorPoint, VectorPoint>> validPPairs = pR.getValidPairs();
         ImageEditor imageEditor = new ImageEditor();
 
-        imageEditor.createImage(dirPath, "A" + f1.getName() + f2.getName(), image1, image2, validAPairs);
-        imageEditor.createImage(dirPath, "P" + f1.getName() + f2.getName(), image1, image2, validPPairs);
+        imageEditor.createImage(dirPath, "A" + f1.getName() + f2.getName(), image1, image2, validAPairs, generatedPairs);
+        imageEditor.createImage(dirPath, "P" + f1.getName() + f2.getName(), image1, image2, validPPairs, generatedPairs);
     }
 }
