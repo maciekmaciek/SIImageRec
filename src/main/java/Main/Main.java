@@ -30,7 +30,7 @@ public class Main {
         ArrayList<VectorPoint> points1 = textParser.getPoints(0);
         ArrayList<VectorPoint> points2 = textParser.getPoints(1);
         PairGenerator pairGenerator = new PairGenerator(points1, points2);
-        ArrayList<Pair<VectorPoint, VectorPoint>> generatedPairs= pairGenerator.generatePairs();
+        ArrayList<Pair<VectorPoint, VectorPoint>> generatedPairs = pairGenerator.generatePairs();
 
         AffineRansac aR = new AffineRansac(generatedPairs);
         PerspRansac pR = new PerspRansac(generatedPairs);
