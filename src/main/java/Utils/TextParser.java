@@ -23,11 +23,21 @@ Pliki *.haraff.sift maj¹ nastêpuj¹c¹ postaæ:
     private ArrayList<VectorPoint> vps2;
     private String points1path;
     private String points2path;
+    private final int img1w;
+    private final int img1h;
+    private final int img2w;
+    private final int img2h;
 
-    public TextParser(String points1path, String points2path) {
+    public TextParser(String points1path, String points2path, int width, int height, int image2Width, int image2Height) {
 
         this.points1path = points1path;
         this.points2path = points2path;
+        this.img1w = width;
+        this.img1h = height;
+        this.img2w = image2Width;
+        this.img2h = image2Height;
+        vps1 = new ArrayList<>();
+        vps2 = new ArrayList<>();
         parseFiles(points1path, points2path);
     }
 
@@ -38,7 +48,7 @@ Pliki *.haraff.sift maj¹ nastêpuj¹c¹ postaæ:
             for(;i<file.size(); i++){
                 String[]arr = file.get(i).split(" ");
                 VectorPoint vp = new VectorPoint();
-                vp.setLocation(Double.parseDouble(arr[0]), Double.parseDouble(arr[1]));
+                vp.setLocation(Double.parseDouble(arr[0])/img1w, Double.parseDouble(arr[1])/img1h);
                 double[] traits = new double[128];
                 for(int j = 5; j<arr.length; j++){
                     traits[j-5] = Double.parseDouble(arr[j]);
@@ -52,13 +62,13 @@ Pliki *.haraff.sift maj¹ nastêpuj¹c¹ postaæ:
             for(;i<file.size(); i++){
                 String[]arr = file.get(i).split(" ");
                 VectorPoint vp = new VectorPoint();
-                vp.setLocation(Double.parseDouble(arr[0]), Double.parseDouble(arr[1]));
+                vp.setLocation(Double.parseDouble(arr[0])/img2w, Double.parseDouble(arr[1])/img2h);
                 double[] traits = new double[128];
                 for(int j = 5; j<arr.length; j++){
                     traits[j-5] = Double.parseDouble(arr[j]);
                 }
                 vp.setTraits(traits);
-                vps1.add(vp);
+                vps2.add(vp);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -66,9 +76,9 @@ Pliki *.haraff.sift maj¹ nastêpuj¹c¹ postaæ:
     }
 
     public ArrayList<VectorPoint> getPoints(int i) {
-        if(i == 1){
+        if(i == 0){
             return vps1;
-        } else if(i == 2) {
+        } else if(i == 1) {
             return vps2;
         }
         return null;

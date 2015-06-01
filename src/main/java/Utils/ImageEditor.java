@@ -16,12 +16,11 @@ import java.util.ArrayList;
  */
 public class ImageEditor {
 
-    public void createImage(String filename, File f1, File f2, ArrayList<Pair<VectorPoint, VectorPoint>> pairs) {
+    public void createImage(String dirPath, String filename, BufferedImage img1, BufferedImage img2, ArrayList<Pair<VectorPoint, VectorPoint>> pairs) {
         try {
-            BufferedImage img1 = ImageIO.read(f1);
-            BufferedImage img2 = ImageIO.read(f2);
+
             int w1 = img1.getWidth();
-            BufferedImage resultIMG = new BufferedImage(w1+img2.getWidth(), img1.getHeight(), BufferedImage.TYPE_INT_RGB);
+            BufferedImage resultIMG = new BufferedImage(w1+img2.getWidth(), Math.max(img1.getHeight(), img2.getHeight()), BufferedImage.TYPE_INT_RGB);
             Graphics2D g2 = resultIMG.createGraphics();
             g2.drawImage(img1, 0, 0, null);
             g2.drawImage(img2, w1, 0, null);
@@ -49,7 +48,7 @@ public class ImageEditor {
             }
             g2.dispose();
 
-            ImageIO.write(resultIMG, "png", new File(f1.getPath().replace(f1.getName(), filename)));
+            ImageIO.write(resultIMG, "png", new File(dirPath + "\\" + filename));
 
         } catch (IOException e) {
             e.printStackTrace();
