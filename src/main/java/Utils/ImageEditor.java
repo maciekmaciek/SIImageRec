@@ -19,21 +19,27 @@ public class ImageEditor {
     public void createImage(String dirPath, String filename, BufferedImage img1, BufferedImage img2, ArrayList<Pair<VectorPoint, VectorPoint>> validPairs, ArrayList<Pair<VectorPoint, VectorPoint>> allPairs) {
         try {
             int w1 = img1.getWidth();
-            BufferedImage resultIMG = new BufferedImage(w1+img2.getWidth(), Math.max(img1.getHeight(), img2.getHeight()), BufferedImage.TYPE_INT_RGB);
+            int h = Math.max(img1.getHeight(), img2.getHeight());
+            BufferedImage resultIMG = new BufferedImage(w1+img2.getWidth(), h + 100, BufferedImage.TYPE_INT_RGB);
             Graphics2D g2 = resultIMG.createGraphics();
+            g2.setPaint(Color.BLACK);
+            g2.drawRect(0, 0, resultIMG.getWidth(), resultIMG.getHeight());
             g2.drawImage(img1, 0, 0, null);
             g2.drawImage(img2, w1, 0, null);
 
+            g2.setPaint(Color.WHITE);
+            g2.setFont(new Font("Arial", Font.PLAIN, 40));
+            g2.drawString("Valid Pairs: " + validPairs.size() + "/" + allPairs.size(), 20, h+40);
             g2.setPaint(Color.RED);
             for(Pair<VectorPoint, VectorPoint> pair: allPairs){
-                g2.drawOval((int)pair.getKey().getX()-3, (int)pair.getKey().getY()+3, 3, 3);
-                g2.drawOval((int)pair.getValue().getX()-3 + w1, (int)pair.getValue().getY()+3, 3, 3);
+                g2.drawOval((int)(pair.getKey().getX()*img1.getWidth())-3, (int)(pair.getKey().getY()*img1.getHeight())+3, 3, 3);
+                g2.drawOval((int)(pair.getValue().getX()*img2.getWidth())-3 + w1, (int)(pair.getValue().getY()*img2.getHeight())+3, 3, 3);
             }
 
             g2.setPaint(Color.GREEN);
             for(Pair<VectorPoint, VectorPoint> pair: validPairs){
-                g2.drawOval((int)pair.getKey().getX()-3, (int)pair.getKey().getY()+3, 3, 3);
-                g2.drawOval((int)pair.getValue().getX()-3 + w1, (int)pair.getValue().getY()+3, 3, 3);
+                g2.drawOval((int)(pair.getKey().getX()*img1.getWidth())-3, (int)(pair.getKey().getY()*img1.getHeight())+3, 3, 3);
+                g2.drawOval((int)(pair.getValue().getX()*img2.getWidth())-3 + w1, (int)(pair.getValue().getY()*img2.getHeight())+3, 3, 3);
             }
 
             int i = 0;
@@ -48,8 +54,9 @@ public class ImageEditor {
                 else if(temp == 3)
                     g2.setPaint(Color.PINK);
 
-                g2.drawLine((int) pair.getKey().getX(), (int) pair.getKey().getY(), (int)pair.getValue().getX()+w1, (int)pair.getValue().getY());
-                g2.drawOval((int)pair.getKey().getX()-3, (int)pair.getKey().getY()+3, 3, 3);
+                g2.drawLine(
+                        (int) (pair.getKey().getX() * img1.getWidth()), (int) (pair.getKey().getY() * img1.getHeight()),
+                        (int) (pair.getValue().getX() * img2.getWidth()) + w1, (int) (pair.getValue().getY() * img2.getHeight()));
             }
             g2.dispose();
 

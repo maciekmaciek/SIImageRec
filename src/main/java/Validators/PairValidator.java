@@ -25,7 +25,7 @@ public class PairValidator {
         Matrix m1 = new Matrix(m1arr);
         m1 = transform.times(m1);
 
-        VectorPoint result = new VectorPoint(m1.get(0,0)/m1.get(0,2), m1.get(0,1)/m1.get(0,2), null);
+        VectorPoint result = new VectorPoint(m1.get(0,0)/m1.get(2,0), m1.get(1,0)/m1.get(2,0), null);
 
         return result.distance(vp2) <= ERROR_MARGIN;
     }

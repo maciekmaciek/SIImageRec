@@ -16,6 +16,8 @@ public class PerspRansac extends Ransac {
 
     public PerspRansac(ArrayList<Pair<VectorPoint, VectorPoint>> generatedPairs) {
         this.generatedPairs = generatedPairs;
+        validPairs = new ArrayList<>();
+
     }
 
     @Override
@@ -121,12 +123,12 @@ public class PerspRansac extends Ransac {
         Matrix v1 = new Matrix(v1arr);
         Matrix v2 = new Matrix(v2arr);
         v1 = v1.inverse();
-        Matrix tempResult = v1.arrayTimes(v2);
+        Matrix tempResult = v1.times(v2);
 
         double[][] resArr = {
-                {tempResult.get(0,0), tempResult.get(0,1), tempResult.get(0,2)},
-                {tempResult.get(0,3), tempResult.get(0,4), tempResult.get(0,5)},
-                {tempResult.get(0,6), tempResult.get(0,7), 1}
+                {tempResult.get(0,0), tempResult.get(1,0), tempResult.get(2,0)},
+                {tempResult.get(3,0), tempResult.get(4,0), tempResult.get(5,0)},
+                {tempResult.get(6,0), tempResult.get(7,0), 1}
         };
         Matrix result = new Matrix(resArr);
 
