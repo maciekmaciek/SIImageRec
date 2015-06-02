@@ -15,8 +15,7 @@ import java.util.Random;
 public class AffineRansac extends Ransac {
 
     public AffineRansac(ArrayList<Pair<VectorPoint, VectorPoint>> generatedPairs) {
-        this.generatedPairs = generatedPairs;
-        validPairs = new ArrayList<>();
+        super(generatedPairs);
     }
 
     @Override
@@ -52,7 +51,7 @@ public class AffineRansac extends Ransac {
 
             model = generateAffineTransform(p1.getKey(), p1.getValue(), p2.getKey(), p2.getValue(), p3.getKey(), p3.getValue());    //generuj
             for(Pair<VectorPoint, VectorPoint> pair: generatedPairs){                                                               //zlicz dobre
-                if(PairValidator.validate(pair, model)){
+                if(PairValidator.validateTransform(pair, model)){
                     score++;
                     tempValidPairs.add(pair);
                 }

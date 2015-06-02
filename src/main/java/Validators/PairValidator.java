@@ -13,8 +13,10 @@ import java.util.Comparator;
  */
 public class PairValidator {
     private static final double ERROR_MARGIN = 0.01;
+    private static final double MAX_DIST = 0.25;
+    private static final double MIN_DIST = 0.01;
 
-    public static boolean validate(Pair<VectorPoint, VectorPoint> pair, Matrix transform){
+    public static boolean validateTransform(Pair<VectorPoint, VectorPoint> pair, Matrix transform){
         VectorPoint vp2 = pair.getValue();
         double m1arr [][] =
                 {
@@ -30,5 +32,9 @@ public class PairValidator {
         return result.distance(vp2) <= ERROR_MARGIN;
     }
 
+    public static boolean validateNeighbour(Pair<VectorPoint, VectorPoint> pair, Pair<VectorPoint, VectorPoint> neighbour) {
+        double distance =  pair.getKey().distance(neighbour.getKey());
+        return distance >= MIN_DIST && distance <= MAX_DIST;
+    }
 
 }

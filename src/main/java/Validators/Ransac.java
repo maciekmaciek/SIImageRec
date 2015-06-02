@@ -12,15 +12,28 @@ import java.util.ArrayList;
  * on 2015-06-01.
  */
 public abstract class Ransac {
+
+
+    public Ransac(ArrayList<Pair<VectorPoint, VectorPoint>> generatedPairs){
+
+        this.generatedPairs = generatedPairs;
+        validPairs = new ArrayList<>();
+        createNeighbourhood();
+    }
     protected ArrayList<Pair<VectorPoint, VectorPoint>> generatedPairs;
     protected ArrayList<Pair<VectorPoint, VectorPoint>> validPairs;
+    protected ArrayList<ArrayList<Pair<VectorPoint, VectorPoint>>> neighbourhood;
 
     public abstract Matrix findTransform();
 
-    public boolean isRANSACpair(VectorPoint v1, VectorPoint v2, double margin, Matrix transform){
-        return false;
-    }
+    public void createNeighbourhood(){
+        neighbourhood = new ArrayList<>();
+        for(int i = 0; i < generatedPairs.size(); i++){
+            for(int j = 0; j < generatedPairs.size(); j++){
 
+            }
+        }
+    }
     public ArrayList<Pair<VectorPoint, VectorPoint>> getValidPairs() {
         return validPairs;
     }
