@@ -29,8 +29,10 @@ public abstract class Ransac {
     public void createNeighbourhood(){
         neighbourhood = new ArrayList<>();
         for(int i = 0; i < generatedPairs.size(); i++){
-            for(int j = 0; j < generatedPairs.size(); j++){
-
+            neighbourhood.add(new ArrayList<>());
+            for (Pair<VectorPoint, VectorPoint> generatedPair : generatedPairs) {
+                if (PairValidator.validateNeighbour(generatedPairs.get(i), generatedPair))
+                    neighbourhood.get(i).add(generatedPair);
             }
         }
     }
