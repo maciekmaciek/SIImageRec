@@ -13,8 +13,8 @@ import java.util.Comparator;
  */
 public class PairValidator {
     private static final double ERROR_MARGIN = 0.01;
-    private static final double MAX_DIST = 0.25;
-    private static final double MIN_DIST = 0.01;
+    private static final double MAX_DIST = 0.3;
+    private static final double MIN_DIST = 0.04;
 
     public static boolean validateTransform(Pair<VectorPoint, VectorPoint> pair, Matrix transform){
         VectorPoint vp2 = pair.getValue();

@@ -26,6 +26,8 @@ public class AffineRansac extends Ransac {
         Random random = new Random();
         ArrayList<Pair<VectorPoint, VectorPoint>> tempValidPairs = new ArrayList<>();
         for(int counter = 0; counter <= 100000; counter++){         //RANSAC
+            System.out.println(counter);
+
             tempValidPairs.clear();
             int score = 0;
             Matrix model;

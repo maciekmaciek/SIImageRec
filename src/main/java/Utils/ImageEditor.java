@@ -31,7 +31,7 @@ public class ImageEditor {
             g2.drawImage(img2, w1, 0, null);
 
             g2.setPaint(Color.WHITE);
-            g2.setFont(new Font("Arial", Font.PLAIN, 40));
+            g2.setFont(new Font("Arial", Font.PLAIN, 25));
             g2.drawString(method + ", Valid Pairs: " + validPairs.size() + "/" + allPairs.size(), 20, h + 40);
             g2.drawString("Params: " + stringify(transform), 20, h + 70);
 

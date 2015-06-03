@@ -12,9 +12,9 @@ import java.util.Random;
  * maciekwski@gmail.com
  * on 2015-06-01.
  */
-public class PerspRansac extends Ransac {
+public class PerspRansacH extends Ransac {
 
-    public PerspRansac(ArrayList<Pair<VectorPoint, VectorPoint>> generatedPairs) {
+    public PerspRansacH(ArrayList<Pair<VectorPoint, VectorPoint>> generatedPairs) {
         super(generatedPairs);
     }
 
@@ -25,53 +25,71 @@ public class PerspRansac extends Ransac {
         int bestScore = 0;
         Random random = new Random();
         ArrayList<Pair<VectorPoint, VectorPoint>> tempValidPairs = new ArrayList<>();
-        for(int counter = 0; counter <= 100000; counter++){         //RANSAC
-            System.out.println(counter);
 
+        Pair<VectorPoint,VectorPoint> p1 = null;
+        Pair<VectorPoint,VectorPoint> p2 = null;
+        Pair<VectorPoint,VectorPoint> p3 = null;
+        Pair<VectorPoint,VectorPoint> p4= null;
+        for(int counter = 0; counter <= 100000; counter++){         //RANSAC
+           // System.out.println(counter);
             tempValidPairs.clear();
             int score = 0;
             Matrix model;
-            Pair<VectorPoint,VectorPoint> p1;
-            Pair<VectorPoint,VectorPoint> p2;
-            Pair<VectorPoint,VectorPoint> p3;
-            Pair<VectorPoint,VectorPoint> p4;
-            do {
-                int i = random.nextInt(size);                           //losuj
+
+            int i = random.nextInt(size);                           //losuj
+            p1 = generatedPairs.get(i);
+            int range = neighbourhood.get(i).size();                //zawê¿
+            int rangeLimit = range*range;                //¿eby nie blokowa³o
+            int numoftries = 0;                                 //¿eby nie blokowa³o
+            if(range >= 3){
                 int j;
                 do {
-                    j = random.nextInt(size);
+                    j = random.nextInt(range);
+                    p2 = neighbourhood.get(i).get(j);
                 } while (j == i);
                 int k;
                 do {
-                    k = random.nextInt(size);
-                } while (k == i || k == j);
-                int l;
-                do {
-                    l = random.nextInt(size);
-                } while (l == i || l == j || l == k);
+                    numoftries++;
+                    k = random.nextInt(range);
+                    p3 = neighbourhood.get(i).get(k);
+                } while ((k == i || k == j || !PairValidator.validateNeighbour(p2, p3)) && numoftries <= rangeLimit);
+                if(numoftries < rangeLimit){
+                    numoftries = 0;
+                    int l;
+                    do {
+                        numoftries++;
+                        l = random.nextInt(range);
+                        p4 = neighbourhood.get(i).get(l);
+                    } while ((l == i || l == j || l == k ||
+                            !PairValidator.validateNeighbour(p2, p4) ||
+                            !PairValidator.validateNeighbour(p3, p4)) &&
+                            numoftries <= rangeLimit);
+                }
 
-                p1 = generatedPairs.get(i);
-                p2 = generatedPairs.get(j);
-                p3 = generatedPairs.get(k);
-                p4 = generatedPairs.get(l);
+            }
+            if(numoftries < rangeLimit) {
+                try {
+                    if (!(p1 == null || p2 == null || p3 == null || p4 == null)) {
 
-            } while(!allDifferent(p1,p2,p3,p4));
+                        model = generateAffineTransform(p1.getKey(), p1.getValue(), p2.getKey(), p2.getValue(), p3.getKey(), p3.getValue(), p4.getKey(), p4.getValue());    //generuj
+                        for (Pair<VectorPoint, VectorPoint> pair : generatedPairs) {                                                               //zlicz dobre
+                            if (PairValidator.validateTransform(pair, model)) {
+                                score++;
+                                tempValidPairs.add(pair);
+                            }
+                        }
 
-            model = generateAffineTransform(p1.getKey(), p1.getValue(), p2.getKey(), p2.getValue(), p3.getKey(), p3.getValue(), p4.getKey(), p4.getValue());    //generuj
-            for(Pair<VectorPoint, VectorPoint> pair: generatedPairs){                                                               //zlicz dobre
-                if(PairValidator.validateTransform(pair, model)){
-                    score++;
-                    tempValidPairs.add(pair);
+                        if (score > bestScore) {
+                            bestScore = score;
+                            bestModel = model;
+                            validPairs.clear();
+                            validPairs.addAll(tempValidPairs);
+                        }
+                    }
+                } catch (RuntimeException re) {
+                    re.printStackTrace();
                 }
             }
-
-            if(score > bestScore){
-                bestScore = score;
-                bestModel = model;
-                validPairs.clear();
-                validPairs.addAll(tempValidPairs);
-            }
-
         }
         return bestModel;
     }
@@ -97,7 +115,7 @@ public class PerspRansac extends Ransac {
     public Matrix generateAffineTransform(VectorPoint v11, VectorPoint v12,
                                           VectorPoint v21, VectorPoint v22,
                                           VectorPoint v31, VectorPoint v32,
-                                          VectorPoint v41, VectorPoint v42){
+                                          VectorPoint v41, VectorPoint v42) throws RuntimeException{
         double[][] v1arr = {
                 {v41.getX(), v41.getY(), 1, 0, 0, 0, -v12.getX()*v11.getX(), -v12.getX()*v11.getY()},
                 {v21.getX(), v21.getY(), 1, 0, 0, 0, -v22.getX()*v21.getX(), -v22.getX()*v21.getY()},
