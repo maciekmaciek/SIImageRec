@@ -5,6 +5,7 @@ import Utils.ImageEditor;
 import Utils.TextParser;
 import Utils.VectorPoint;
 import Validators.AffineRansacH;
+import Validators.LORansacH;
 import Validators.PairGenerator;
 import Validators.PerspRansacH;
 import javafx.util.Pair;
@@ -52,20 +53,28 @@ public class MainWorker implements Runnable{
 
         AffineRansacH ahR = new AffineRansacH(generatedPairs);
         PerspRansacH phR = new PerspRansacH(generatedPairs);
+        LORansacH lhR = new LORansacH(generatedPairs);
         //AffineRansac aR = new AffineRansac(generatedPairs);
         //PerspRansac pR = new PerspRansac(generatedPairs);
 
         Matrix aRtransform = ahR.findTransform();
         Matrix pRtransform = phR.findTransform();
+        Matrix lRtransform = lhR.findTransform();
         ImageEditor imageEditor = new ImageEditor();
 
         System.out.println("Results from files: " + i1.getName() + ", " + i2.getName() + "... on Thread " + Thread.currentThread().getId());
         System.out.println(ahR.getClass().toString() + " matches - " + ahR.getValidPairs().size() + "/" + generatedPairs.size());
         System.out.println(phR.getClass().toString() + " matches - " + phR.getValidPairs().size() + "/" + generatedPairs.size());
+        System.out.println(lhR.getClass().toString() + " matches - " + lhR.getValidPairs().size() + "/" + generatedPairs.size());
+
         ArrayList<Pair<VectorPoint, VectorPoint>> validAPairs = ahR.getValidPairs();
         ArrayList<Pair<VectorPoint, VectorPoint>> validPPairs = phR.getValidPairs();
+        ArrayList<Pair<VectorPoint, VectorPoint>> validLPairs = lhR.getValidPairs();
 
-        imageEditor.createImage(aRtransform, ahR.getClass().toString(), dirPath, i1.getName() + i2.getName() + "A.png", image1, image2, validAPairs, generatedPairs);
-        imageEditor.createImage(pRtransform, phR.getClass().toString(), dirPath, i1.getName() + i2.getName() + "P.png", image1, image2, validPPairs, generatedPairs);
+        String i1name = i1.getName().substring(0, i1.getName().length() - 4);
+        String i2name = i2.getName().substring(0, i2.getName().length() - 4);
+        imageEditor.createImage(aRtransform, ahR.getClass().toString(), dirPath, i1name + i2name + "A.png", image1, image2, validAPairs, generatedPairs);
+        imageEditor.createImage(pRtransform, phR.getClass().toString(), dirPath, i1name + i2name + "P.png", image1, image2, validPPairs, generatedPairs);
+        imageEditor.createImage(lRtransform, lhR.getClass().toString(), dirPath, i1name + i2name + "L.png", image1, image2, validLPairs, generatedPairs);
     }
 }

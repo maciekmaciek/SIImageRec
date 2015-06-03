@@ -37,4 +37,9 @@ public class PairValidator {
         return distance >= MIN_DIST && distance <= MAX_DIST;
     }
 
+    public static boolean validateNeighbourNear(Pair<VectorPoint, VectorPoint> pair, Pair<VectorPoint, VectorPoint> neighbour) {
+        double distance =  pair.getKey().distance(neighbour.getKey());
+        return distance >= MIN_DIST;
+    }
+
 }
